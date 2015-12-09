@@ -1,0 +1,9 @@
+#exportPattern("^[[:alpha:]]+")
+import(rugarch, tcltk)
+importFrom("grDevices", "dev.new")
+importFrom("graphics", "abline", "boxplot", "grid", "legend", "lines",
+             "par", "plot.new")
+importFrom("stats", "Box.test", "arima", "density", "na.omit",
+             "plot.ts", "pnorm", "ppoints", "predict", "qnorm", "sd",
+             "time", "ts.plot", "tsdiag", "var")
+importFrom("utils", "head", "write.csv")
