@@ -44,7 +44,7 @@ Whether to add rug.
 }
 }
 \details{
-This function is within the iClick GUI, is executed within iClick.VisOneReturns().
+This function is an internal function of iClick GUI, which is executed on iClick.VisOneReturns GUI.
 }
 \value{
 Plot

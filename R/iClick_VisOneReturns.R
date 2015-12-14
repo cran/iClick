@@ -1,8 +1,7 @@
 iClick.VisOneReturns <- function(dat) {
 
 x=dat
-N = ceiling(sqrt(ncol(x)))
- 
+
 dataRefreshCode <- function(...)  {
 type = as.integer(.oneClickVisUniReturns(obj.name = "plotType"))
 Unit = colnames(x)
@@ -228,6 +227,6 @@ par(mfrow = c(1,1))
  assign(".oneClickVisUniReturns.values.old", starts, envir = .oneClickVisUniReturns.env)
     
 # Return Value:
-    invisible(myPane)
+invisible(myPane)
   }
   

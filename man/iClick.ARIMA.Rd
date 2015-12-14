@@ -50,16 +50,17 @@ arima() and auto.arima() of package forecast.
 
 \examples{
 
-##== Unmark comments ## and execute
-##data("returnsDaily24")
-##dat=timeSeries::as.timeSeries(returnsDaily24) 
-  # Creat a timeSeries object 
-##y=dat[,5]  #Select the fifth variable
+#data("returnsDaily24")
+#temp=timeSeries::as.timeSeries(returnsDaily24) 
+#y=temp[,5] 
 
-##iClick.ARIMA(y) 
-#Default arguments can be changed easily.
-#For example, 
-##iClick.ARIMA(y,AR = 2, MA = 2, n.ahead = 12, #ic = "bic")
+dat=rnorm(200,5,1)
+y=ts(dat, start = c(1990, 1), frequency = 12)
+
+iClick.ARIMA(y) 
+
+#More 
+#iClick.ARIMA(y,AR = 2, MA = 1, n.ahead = 4, ic = "bic")
 
 }
 

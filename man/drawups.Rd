@@ -20,7 +20,7 @@ A timeSeries object, single time series returns.
 }
 }
 \details{
-This function is within the iClick GUI, can be executed by GUI button.
+This function is an internal function for drawplot of iClick GUI, which is executed on iClick.VisOneReturns GUI.
 }
 \value{
 Returns of draw up periods.

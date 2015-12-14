@@ -34,10 +34,14 @@ Ho Tsung-wu <tsungwu@mail.shu.edu.tw>
 
 
 \examples{
-##== Unmark the ## comments, and execute the codes
-##data("returnsDaily24")
-##dat=timeSeries::as.timeSeries(returnsDaily24) 
-  # Creat a timeSeries object 
-##y=dat[,5]  #Select the fifth variable
-##iClick.VisOneReturns(y)
+##== External data
+#data("returnsDaily24")
+#dat=timeSeries::as.timeSeries(returnsDaily24) 
+#y=dat[,5]  #Select the fifth variable
+
+##== Simulation data
+dat=rnorm(500,5,1)
+y=ts(dat, start = c(1970, 1), frequency = 12)
+iClick.VisOneReturns(y)
+
 }

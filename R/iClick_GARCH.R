@@ -56,7 +56,7 @@ fit=ugarchfit(spec=mainSpec, data =y, solver="hybrid",solver.control = list(trac
 mainSpecFilter=ugarchspec(mean.model=meanSpec, variance.model=varSpec, distribution.model=distSpec[j],fixed.pars = as.list(coef(fit)))
 
 fcst.tmp=ugarchforecast(fit, data = y, n.ahead = n.ahead, n.roll = 0, external.forecasts = list(mregfor = NULL, vregfor = NULL))
-garchSD.tmp=sigma(fit)
+garchSD.tmp=rugarch::sigma(fit)
 newsImpactData.tmp=newsimpact(fit)
 
 results[[j]]=fit
@@ -101,7 +101,8 @@ gof.stat_tmp=round(gof(fit,c(20,30,40,50))[,2],4)
 gof.pvalue_tmp=round(gof(fit,c(20,30,40,50))[,3],8)
 gof.stat=cbind(gof.stat,gof.stat_tmp)
 gof.pvalue=cbind(gof.pvalue,gof.pvalue_tmp)
-} #===== End of main loop
+} 
+#===== End of main loop
 
 colnames(HalfLife)="Half-life"
 rownames(nyblomJoint)=By
