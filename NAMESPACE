@@ -1,11 +1,12 @@
 exportPattern("^[[:alpha:]]+")
-import(rugarch, tcltk)
-importFrom("grDevices", "dev.new")
+import("lattice","rugarch", "tcltk")
+importFrom("grDevices", "dev.new","colorRampPalette")
 importFrom("graphics", "abline", "boxplot", "grid", "legend", "lines",
              "par", "plot.new")
 importFrom("stats", "Box.test", "arima", "density", "na.omit",
              "plot.ts", "pnorm", "ppoints", "predict", "qnorm", "sd",
-             "time", "ts.plot", "tsdiag", "var")
+             "time", "ts","ts.plot", "tsdiag", "var","rnorm","is.ts")
 importFrom("utils", "head","write.csv")
+export("iClick.ARIMA","iClick.GARCH","iClick.VisOneReturns","iClick.VisAssetPrice")
 export("boxPlotX","cumulatedPlotX","drawdownPlotX","drawupPlotX","drawups","qqnormPlotX","seriesPlotX")
-export("iClick.ARIMA","iClick.GARCH","iClick.VisOneReturns")
+export("calendarHeat","cutAndStack")

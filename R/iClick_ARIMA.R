@@ -1,19 +1,24 @@
 
 iClick.ARIMA <- function(dat,AR=1, MA=1,n.ahead=24,ic="aic") {
 
-x=dat
+  if (class(dat)=="ts"){x=timeSeries::as.timeSeries(dat)}
+  else if (ncol(dat)==2) {
+    tmp=cbind(dat[,2])
+    rownames(tmp)=as.character(dat[,1])
+    x=timeSeries::as.timeSeries(tmp)
+    colnames(x)=names(dat)[2]}
 
 t=nrow(x)
 
 out.fixed = arima(x, order = c(AR,0,MA))
-p.fixed = predict(out.fixed, n.ahead = n.ahead)    
+p.fixed = predict(out.fixed, n.ahead = n.ahead)
 ARIMA.fixed=paste("ARIMA(",out.fixed$arma[1],",",out.fixed$arma[6],",",out.fixed$arma[2],"), fixed orders",sep="")
 fixed_BP1=Box.test(out.fixed$residuals, lag=12, type=c("Box-Pierce"))
 fixed_LB1=Box.test(out.fixed$residuals, lag=12, type=c("Ljung-Box"))
 fixed_BP2=Box.test(out.fixed$residuals^2, lag=12, type=c("Box-Pierce"))
 fixed_LB2=Box.test(out.fixed$residuals^2, lag=12, type=c("Ljung-Box"))
 ORDER1=paste(out.fixed$arma[1],out.fixed$arma[6],out.fixed$arma[2],sep="")
-filename01=paste("fixedOrderARIMA_", ORDER1,sep="") 
+filename01=paste("fixedOrderARIMA_", ORDER1,sep="")
 filename1=paste(".",filename01,".RData",sep="")
 
 out.auto=forecast::auto.arima(x,ic=ic,max.p=16, max.q=16)
@@ -25,7 +30,7 @@ auto_LB1=Box.test(out.auto$residuals, lag=12, type=c("Ljung-Box"))
 auto_BP2=Box.test(out.auto$residuals, lag=12, type=c("Box-Pierce"))
 auto_LB2=Box.test(out.auto$residuals, lag=12, type=c("Ljung-Box"))
 ORDER2=paste(out.auto$arma[1],out.auto$arma[6],out.auto$arma[2],sep="")
-filename02=paste(ic,paste("OrderARIMA_", ORDER2,sep=""),sep="") 
+filename02=paste(ic,paste("OrderARIMA_", ORDER2,sep=""),sep="")
 filename2=paste(".",filename02,".RData",sep="")
 
 
@@ -33,12 +38,12 @@ filename2=paste(".",filename02,".RData",sep="")
     type = as.integer(.oneClickARIMA(obj.name = "plotType"))
     Unit = colnames(x)
 
-if (type == 1) { 
+if (type == 1) {
         cat("Estimation outputs", "\n")
         print(out.fixed)
         }
 
-if (type == 2) { tsdiag(out.fixed) } 
+if (type == 2) { tsdiag(out.fixed) }
 
 if (type == 3) {
 cat("\n","Tests for residual serial correlation", "\n")
@@ -97,14 +102,14 @@ colnames(fixed_dataX)=c(names(x),"fittedValues","Residuals")
 
 
 
-ResultsFixedPQ<-list(results=out.fixed,coefTable=fixed_OUT,dataPred=fixed_dataPred,dataX=fixed_dataX, TEST1=list(fixed_LB1,fixed_BP1),TEST2=list(fixed_LB2,fixed_BP2)) 
+ResultsFixedPQ<-list(results=out.fixed,coefTable=fixed_OUT,dataPred=fixed_dataPred,dataX=fixed_dataX, TEST1=list(fixed_LB1,fixed_BP1),TEST2=list(fixed_LB2,fixed_BP2))
 
 save(ResultsFixedPQ,file=filename1)
 cat("\n", "Outputs saved as ", filename1,"\n")
         }
 if (type == 9) {print(out.auto)
         }
-if (type == 10) {tsdiag(out.fixed)} 
+if (type == 10) {tsdiag(out.fixed)}
 
 if (type == 11) {
 cat("\n","Tests for residual serial correlation", "\n")
@@ -123,7 +128,7 @@ print(auto_LB1)
 
 if (type == 13) {
 plot(density(out.auto$residuals), col="blue", xlim=c(-8,8),main=paste("Residuals of ",names(x),", ",ARIMA.auto,sep=""))
-       
+
           }
 if (type == 14) {
 plot.new()
@@ -136,8 +141,8 @@ newData=timeSeries::as.timeSeries(data.frame(x,out.auto$residuals))
 colnames(newData)=c(names(x),"rsd");abline(h=c(-s,s), lwd=2, col="lightGray")
 plot(newData[,2], ylab="",main=paste("Innovations of ", names(x),sep=""), col="blue", lwd=2);abline(h=c(-s,s), lwd=2, col="lightGray")
 plot.ts(gain, main="Gain in forecast s.d.", ylab="Per cent", col="blue", lwd=2)
-par(mfrow=c(1,1))     
-        
+par(mfrow=c(1,1))
+
           }
 
 if (type == 15) {
@@ -163,9 +168,9 @@ colnames(auto_dataX)=c(names(x),"fittedValues","Residuals")
 ResultsAutoPQ=list(results=out.auto,coefTable=auto_OUT,dataPred=auto_dataPred,dataX=auto_dataX, TEST1=list(auto_LB1,auto_BP1),TEST2=list(auto_LB2,auto_BP2))
 
 save(ResultsAutoPQ,file=filename2)
-cat("\n", "Outputs saved as ", filename2,"\n")                             
+cat("\n", "Outputs saved as ", filename2,"\n")
      }
-} 
+}
 
  #End of dataRefreshCode()
 
@@ -280,12 +285,12 @@ paste("16 Save output: ", filename2,sep="")   ),
     if(missing(title)) {
       title = "Control Widget"
     }
-    
+
     # GUI Settings:
     myPane <- tktoplevel()
     tkwm.title(myPane, title)
     tkwm.geometry(myPane, "+0+0")
-    # Buttons:  
+    # Buttons:
     framed.button1 <- ttkframe(myPane,padding=c(10,10,12,12))
     framed.button2 <- ttkframe(myPane,padding=c(10,6,12,12))
     tkpack(framed.button1, fill = "x",side="top")
@@ -295,7 +300,7 @@ paste("16 Save output: ", filename2,sep="")   ),
       button.names <- NULL
     }
 
-#loop through button names    
+#loop through button names
     for (i in 1:(length(button.names)/2)) {
       button.fun <-button.functions[[i]]
       plotButtons<-tkbutton(framed.button1, text = button.names[i], command = button.fun, anchor = "nw",relief="ridge",width = "65")
@@ -313,18 +318,18 @@ paste("16 Save output: ", filename2,sep="")   ),
 
   #===== Quit Button:
     quitCMD = function() {tkdestroy(myPane)}
-    
+
    quitButton<-tkbutton(framed.button2, text = "Quit", command = quitCMD, anchor = "center",relief="ridge",width = "8")
    tkbind(myPane,"Q",function() tcl(quitButton,"invoke"))
    tkfocus(quitButton)
    tkconfigure(quitButton,foreground="indianred2", font=tkfont.create(weight="bold",size=10))
 
-   tkconfigure(quitButton,underline=0) 
+   tkconfigure(quitButton,underline=0)
    tkpack(quitButton, side = "right",fill = "x",ipady=3)
 
-    
+
 assign(".oneClickARIMA.values.old", starts, envir = .oneClickARIMA.env)
-    
+
     # Return Value:
 invisible(myPane)
   }

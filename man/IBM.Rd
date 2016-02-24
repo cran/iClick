@@ -14,13 +14,13 @@ Daily price data of IBM, 2007/1/3~2015/10/29
 \format{
   A data frame with 2223 observations on the following 6 variables.
   \describe{
-    \item{\code{Date}}{a date string}
-    \item{\code{IBM.OPEN}}{a numeric vector}
-    \item{\code{IBM.HIGH}}{a numeric vector}
-    \item{\code{IBM.LOW}}{a numeric vector}
-    \item{\code{IBM.CLOSE}}{a numeric vector}
-    \item{\code{IBM.VOLUME}}{a numeric vector}
-    \item{\code{IBM.ADJ.CLOSE}}{a numeric vector}    
+    \item{\code{X}}{A date string}
+    \item{\code{IBM.OPEN}}{A numeric vector}
+    \item{\code{IBM.HIGH}}{A numeric vector}
+    \item{\code{IBM.LOW}}{A numeric vector}
+    \item{\code{IBM.CLOSE}}{A numeric vector}
+    \item{\code{IBM.VOLUME}}{A numeric vector}
+    \item{\code{IBM.ADJ.CLOSE}}{A numeric vector}
   }
 }
 

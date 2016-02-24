@@ -1,17 +1,24 @@
 iClick.GARCH  <- function(dat,meanEQ=meanEQ,garchEQ=garchEQ,n.ahead=15) {
 
 Sys.setlocale(category = "LC_ALL", locale = "English_United States.1252")
-y=dat
+
+  if (class(dat)=="ts"){y=timeSeries::as.timeSeries(dat)}
+  else if (ncol(dat)==2) {
+    x=cbind(dat[,2])
+    rownames(x)=as.character(dat[,1])
+    y=timeSeries::as.timeSeries(x)
+    colnames(y)=c(names(dat)[2])}
+
 titleNAME=paste("iClick ", garchEQ$Type,": Univariate time Series")
 
 if (meanEQ$autoFitArma==TRUE) {
        out.auto=forecast::auto.arima(y,ic="aic");
        AR=out.auto$arma[1];MA=out.auto$arma[2]} else {
-      AR=meanEQ$AR;MA=meanEQ$MA 
+      AR=meanEQ$AR;MA=meanEQ$MA
        }
 
 
-if (is.null(meanEQ$Exo)) {meanEXO=NULL} else { 
+if (is.null(meanEQ$Exo)) {meanEXO=NULL} else {
 meanEXO = as.matrix(meanEQ$exo) }
 
 if (is.null(garchEQ$exo)) {varEXO=NULL}  else {
@@ -26,7 +33,7 @@ By=distSpec
 
 myspecBench=ugarchspec(mean.model=meanSpec, variance.model=varSpec, distribution.model="jsu")
 bench=ugarchfit(spec=myspecBench, data =y, solver.control = list(trace = 0))
-filenameALL=paste(".",garchEQ$Type,sep="")  
+filenameALL=paste(".",garchEQ$Type,sep="")
 #==========
 #==========Beginning loop
 #==========
@@ -78,7 +85,7 @@ MM=matrix(NA,length(add),1)
 rownames(MM)=rownames(nyblom(bench)$IndividualStat)[add]
 nyblomIndiv.temp=rbind(nyblom(fit)$IndividualStat,MM)
 }  else  {
- nyblomIndiv.temp=nyblom(fit)$IndividualStat 
+ nyblomIndiv.temp=nyblom(fit)$IndividualStat
 }
 nyblomIndiv0=cbind(nyblomIndiv0,nyblomIndiv.temp)
 
@@ -101,7 +108,7 @@ gof.stat_tmp=round(gof(fit,c(20,30,40,50))[,2],4)
 gof.pvalue_tmp=round(gof(fit,c(20,30,40,50))[,3],8)
 gof.stat=cbind(gof.stat,gof.stat_tmp)
 gof.pvalue=cbind(gof.pvalue,gof.pvalue_tmp)
-} 
+}
 #===== End of main loop
 
 colnames(HalfLife)="Half-life"
@@ -129,7 +136,7 @@ NAMES2=c(
 "49. Table of Coefficients",
 "50. Sign Bias Test",
 "51. Nyblom Stability Test and Half-life",
-"52. Goodness-of-fit", 
+"52. Goodness-of-fit",
 "53. Selection Criteria",
 paste("54. Save as ",paste(filenameALL,".ByDist.RData",sep=""),sep=""))
 ##==========##
@@ -146,7 +153,7 @@ NAMES1=NULL
 for (j in 1:48) {NAMES1=c(NAMES1, paste(j,NAMES0[j],sep=". "))}
 
 NAMES=c(NAMES1,NAMES2)
-filenameALL=paste(".",garchEQ$Type,sep="")  
+filenameALL=paste(".",garchEQ$Type,sep="")
     dataRefreshCode <- function(...)  {
     type = as.integer(.oneClickGARCH(obj.name = "plotType"))
 
@@ -170,10 +177,10 @@ par(mfrow=c(1,1))
 
          ## 5. Forecasting
         if (type == 5) {plot.new();
-        par(mfrow=c(2,1)) 
+        par(mfrow=c(2,1))
         plot(fcst[[1]],which=1);plot(fcst[[1]],which=3)
-        par(mfrow=c(1,1))         
-                
+        par(mfrow=c(1,1))
+
          }
 
         # Save outputs:
@@ -204,10 +211,10 @@ par(mfrow=c(1,1))
 
 ## 5. Forecasting
 if (type == 11) {plot.new();
-        par(mfrow=c(2,1)) 
+        par(mfrow=c(2,1))
         plot(fcst[[2]],which=1)
         plot(fcst[[2]],which=3)
-        par(mfrow=c(1,1))         
+        par(mfrow=c(1,1))
 }
 
 # Save outputs:
@@ -245,10 +252,10 @@ par(mfrow=c(1,1))
 ## 5. Forecasting
 if (type == 17) {
 plot.new()
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[3]],which=1)
 plot(fcst[[3]],which=3)
-par(mfrow=c(1,1))         
+par(mfrow=c(1,1))
 }
 
 # Save outputs:
@@ -283,9 +290,9 @@ par(mfrow=c(1,1))
 
 ## 5. Forecasting
 if (type == 23) {plot.new();
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[4]],which=1);plot(fcst[[4]],which=3)
-par(mfrow=c(1,1))         
+par(mfrow=c(1,1))
 }
 
 # Save outputs:
@@ -305,7 +312,7 @@ if (type == 26) {
   plot(results[[5]],which=3)}
 
 ## 3. plot all
-if (type == 27) { 
+if (type == 27) {
   plot.new()
   plot(results[[5]],which="all")}
 
@@ -321,11 +328,11 @@ par(mfrow=c(1,1))
 ## 5. Forecasting
 if (type == 29) {
   plot.new()
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[5]],which=1)
 plot(fcst[[5]],which=3)
-par(mfrow=c(1,1))         
-                
+par(mfrow=c(1,1))
+
          }
 
 # Save outputs:
@@ -361,7 +368,7 @@ par(mfrow=c(1,1))
 ## 5. Forecasting
 if (type == 35) {
   plot.new()
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[6]],which=1)
 plot(fcst[[6]],which=3)
 par(mfrow=c(1,1))
@@ -379,7 +386,7 @@ cat("\n", "Outputs saved as ", filename,"\n")
 if (type == 37) { show(results[[7]])  }
 
 ## 2. plot squared garch
-if (type == 38) { 
+if (type == 38) {
   dev.new()
   plot(results[[7]],which=3)}
 
@@ -413,10 +420,10 @@ par(mfrow=c(1,1))
          ## 5. Forecasting
 if (type == 41) {
   plot.new()
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[7]],which=1)
 plot(fcst[[7]],which=3)
-par(mfrow=c(1,1))         
+par(mfrow=c(1,1))
  }
 
 # Save outputs:
@@ -431,12 +438,12 @@ cat("\n", "Outputs saved as ", filename,"\n")
 if (type == 43) { show(results[[8]])  }
 
 ## 2. plot squared garch
-if (type == 44) { 
+if (type == 44) {
   dev.new()
   plot(results[[8]],which=3)}
 
 ## 3. plot all
-if (type == 45) { 
+if (type == 45) {
   plot.new()
   plot(results[[8]],which="all")}
 
@@ -453,10 +460,10 @@ par(mfrow=c(1,1))
 
 ## 5. Forecasting
 if (type == 47) {plot.new();
-par(mfrow=c(2,1)) 
+par(mfrow=c(2,1))
 plot(fcst[[8]],which=1)
 plot(fcst[[8]],which=3)
-par(mfrow=c(1,1))         
+par(mfrow=c(1,1))
          }
 
 # Save outputs:
@@ -469,18 +476,18 @@ cat("\n", "Outputs saved as ", filename,"\n")
 
         ## 1. Show coefficient output
 if (type == 49) {
-cat("\n","=====================","\n") 
+cat("\n","=====================","\n")
 cat("\n","Table of Coefficients","\n")
 show(COEF)
 COEFfilename=paste(filenameALL,"_COEF",".RData",sep="")
 save(COEF,file=COEFfilename)
 print(paste("Coefficients Table saved as ",COEFfilename,sep=""))
-cat("\n","=====================","\n")         
+cat("\n","=====================","\n")
           }
 
 ## 2. Sign Bias Test
 if (type == 50) {
-cat("\n","=====================","\n")        
+cat("\n","=====================","\n")
 cat("\n","Sign Bias Test: Statistics","\n")
 show(SB.tratio)
 cat("\n","Sign Bias Test: P-value","\n")
@@ -511,9 +518,9 @@ cat("\n","=====================","\n")
 ## 5. criteria
 if (type == 53) {
 cat("\n","=====================","\n")
-cat("\n","Selection criteria","\n")       
-show(criteria)         
-cat("\n","=====================","\n")                
+cat("\n","Selection criteria","\n")
+show(criteria)
+cat("\n","=====================","\n")
 }
 
 # save outputs
@@ -524,11 +531,11 @@ gof=list(gof.stat,gof.pvalue)
 resultsGarch.ByDist=list(results,NyblomTest,SignBias,criteria)
 save(resultsGarch.ByDist,file=paste(filenameALL,"byDist.RData",sep=""))
 cat("\n","Outputs saved as ", paste(filenameALL,"byDist.RData",sep=""),"\n")
-write.csv(rbind(nyblomIndiv,"=",t(nyblomJoint)),file=paste(filenameALL,"Nyblom","byDist.csv",sep=""))   
+write.csv(rbind(nyblomIndiv,"=",t(nyblomJoint)),file=paste(filenameALL,"Nyblom","byDist.csv",sep=""))
 write.csv(rbind(SB.tratio,"=",SB.pvalue),file=paste(filenameALL,".SignBias.","byDist.csv",sep=""))
 write.csv(rbind(gof.stat,"=",gof.pvalue),file=paste(filenameALL,".gof.","byDist.csv",sep=""))
-write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","byDist.csv",sep=""))        
-          }                           
+write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","byDist.csv",sep=""))
+          }
 
 }  #End of dataRefreshCode()
 
@@ -725,7 +732,7 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
   function(names, minima, maxima, resolutions, starts,button.functions, button.names, no, set.no.value, obj.name, obj.value,reset.function, title)
   {
 
-  
+
     if(!exists(".oneClickGARCH.env")) {
       .oneClickGARCH.env <<- new.env()
     }
@@ -740,7 +747,7 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
     if(missing(title)) {
       title = "Control Widget"
     }
-    
+
     # GUI Settings:
     myPane <- tktoplevel()
     tkwm.title(myPane, title)
@@ -749,7 +756,7 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
 
     # Buttons:
 
- PADDING= c(3,3,3,3)   
+ PADDING= c(3,3,3,3)
     framed.buttonA <- ttkframe(myPane,padding=c(3,3,3,3))
      tkpack(framed.buttonA, side="left")
        framed.button1 <- ttkframe(framed.buttonA,padding=PADDING)
@@ -758,7 +765,7 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
        tkpack(framed.button2, fill = "x")
        framed.button3 <- ttkframe(framed.buttonA,padding=PADDING)
        tkpack(framed.button3)
- 
+
     framed.buttonB <- ttkframe(myPane,padding=c(0,3,3,3))
     tkpack(framed.buttonB,after=framed.buttonA,side="left")
        framed.button4 <- ttkframe(framed.buttonB,padding=PADDING)
@@ -780,13 +787,13 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
 
     framed.buttonD <- ttkframe(myPane,padding=PADDING)
     tkpack(framed.buttonD,before=framed.buttonA,side="bottom")
-     
-  
+
+
     if (missing(button.names)) {
       button.names <- NULL
     }
 
-#loop through button names    
+#loop through button names
     for (i in 1:6) {
       button.fun <-button.functions[[i]]
       plotButtons<-tkbutton(framed.button1, text = button.names[i], command = button.fun, anchor = "nw",relief="ridge",width = "36")
@@ -871,18 +878,18 @@ write.csv(rbind(criteria,"=",t(HalfLife)),file=paste(filenameALL,".HalfLife.","b
     tkdestroy(myPane)
     Sys.setlocale(category = "LC_ALL", locale = "Chinese (Traditional)_Taiwan.950")
     }
-    
+
    quitButton<-tkbutton(framed.buttonD, text = "Quit", command = quitCMD, anchor = "center",relief="ridge",width = "8")
    tkbind(myPane,"Q",function() tcl(quitButton,"invoke"))
    tkfocus(quitButton)
    tkconfigure(quitButton,foreground="blue", font=tkfont.create(weight="bold",size=10))
-   tkconfigure(quitButton,underline=0) 
+   tkconfigure(quitButton,underline=0)
 
    tkpack(quitButton, side = "right",fill = "x",padx=0.025)
 
-    
+
  assign(".oneClickGARCH.values.old", starts, envir = .oneClickGARCH.env)
-    
+
     # Return Value:
 invisible(myPane)
   }

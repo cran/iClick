@@ -16,7 +16,7 @@ iClick.ARIMA(dat, AR = 1, MA = 1, n.ahead = 24, ic = "aic")
 
 \arguments{
   \item{dat}{
-Time series data frame, with the first column is the date string.
+dat has two forms:(1) It may be a 2-column data frame, with the 1-st column as the date string, and the 2nd column is the numeric return series. (2) It can also be created by a ts() object as a none daily time series. However, the ts object may not be suitable for some financial time series returns plot, for example, drawdown.
 }
   \item{AR}{
 Pre-specified fixed AR order.
@@ -28,7 +28,7 @@ Pre-specified fixed MA order.
 Periods of out-of-sample forecast.
 }
   \item{ic}{
-Information criteria for lag selection,ic=c("aicc", "aic", "bic"). See auto.arima() of package forecast. 
+Information criteria for lag selection,ic=c("aicc", "aic", "bic"). See auto.arima() of package forecast.
 }
 }
 \details{
@@ -50,17 +50,18 @@ arima() and auto.arima() of package forecast.
 
 \examples{
 
+##External data
 #data("returnsDaily24")
-#temp=timeSeries::as.timeSeries(returnsDaily24) 
-#y=temp[,5] 
+#y=returnsDaily24[,c(1,5)]
 
-dat=rnorm(200,5,1)
-y=ts(dat, start = c(1990, 1), frequency = 12)
+## Simulation data
+dat=rnorm(100,5,1)
+y=ts(dat, start = c(1970, 1), frequency = 12)
 
-iClick.ARIMA(y) 
+iClick.ARIMA(y)
 
-#More 
-#iClick.ARIMA(y,AR = 2, MA = 1, n.ahead = 4, ic = "bic")
+#More
+#iClick.ARIMA(y,AR = 2, MA = 2, n.ahead = 12, ic = "bic")
 
 }
 

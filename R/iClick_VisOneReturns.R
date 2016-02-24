@@ -1,92 +1,127 @@
 iClick.VisOneReturns <- function(dat) {
 
-x=dat
+if (class(dat)=="ts"){
+  x=timeSeries::as.timeSeries(dat)
+}
+else if (ncol(dat)==2) {
+y=cbind(dat[,2])
+rownames(y)=as.character(dat[,1])
+x=timeSeries::as.timeSeries(y)
+colnames(x)=c(names(dat)[2])
+}
 
-dataRefreshCode <- function(...)  {
-type = as.integer(.oneClickVisUniReturns(obj.name = "plotType"))
-Unit = colnames(x)
+    N = ceiling(sqrt(ncol(x)))
 
-# Print Basic Return Statistics:
-if (type == 1) {
-summaryTable=as.matrix(fBasics::basicStats(x)[-c(10:12),])
-rownames(summaryTable)=rownames(fBasics::basicStats(x))[-c(10:12)]
-print(summaryTable)
+    if (max(x)>=1) { x=x*0.01  }
+
+        dataRefreshCode <- function(...)  {
+    type = as.integer(.oneClickVisUniReturns(obj.name = "plotType"))
+    Unit = colnames(x)
+
+        # Print Basic Return Statistics:
+        if (type == 1) {
+        summaryTable=as.matrix(fBasics::basicStats(x)[-c(10:12),])
+        rownames(summaryTable)=rownames(fBasics::basicStats(x))[-c(10:12)]
+        print(summaryTable)
        }
 
-# Return Series Plot:
-if (type == 2) { 
-seriesPlotX(x,ylab="Returns", col = "indianred2") }
+        # Return Series Plot:
+        if (type == 2) {
+          dev.new();plot.new();
+        seriesPlotX(x,ylab="Returns", col = "indianred2") }
 
-# Cumulate Return Series Plot
-if (type == 3) {
-seriesPlotX(100*exp(timeSeries::colCumsums(x/100)),ylab="Cumulated Returns", col = "indianred2")
-abline(h = 100, col = "steelblue")
-}
+        # Cumulate Return Series Plot
+        if (type == 3) {
+        dev.new()
+         seriesPlotX(100*exp(timeSeries::colCumsums(x)),ylab="Cumulated Returns", col = "indianred2")
 
-# Up-down Plot:
-if (type == 4) {
-par(mfrow = c(2,1))
-drawupPlotX(x/100,ylab="Up Returns",col="indianred2")         
-drawdownPlotX(x/100,ylab="Down Returns",col="darkgreen")            
-par(mfrow = c(1,1))
-}
+         abline(h = 100, col = "steelblue")
+        }
 
-# Histogram Plot:
-if (type == 5) {fBasics::histPlot(x, skip = TRUE,col="indianred2") }
+        # Up-down Plot:
+        if (type == 4) {
+        dev.new()
+plot.new();
+        par(mfrow = c(2,1))
+        drawupPlotX(x,ylab="Up Returns",col="indianred2")
+        drawdownPlotX(x,ylab="Down Returns",col="darkgreen")
+        par(mfrow = c(1,1))
+        }
 
-# Density Plot:
-if (type == 6) {fBasics::densityPlot(x,col="indianred2") }
+        # Histogram Plot:
+        if (type == 5) {
+          dev.new();
+          fBasics::histPlot(x, skip = TRUE,col="indianred2") }
 
-# Normal QQ Plot:
-if (type == 7) {qqnormPlotX(x,col="indianred2") }
+        # Density Plot:
+        if (type == 6) {
+          dev.new();
+          fBasics::densityPlot(x,col="indianred2") }
 
-# Box-Whisker Plot:
-if (type == 8) {boxPlotX(x,col="indianred2") }
+        # Normal QQ Plot:
+        if (type == 7) {
+          dev.new();
+          qqnormPlotX(x,col="indianred2") }
 
-# ACF/PACF Plot:
-if (type == 9) {
-par(mfrow = c(2,1))
-fBasics::acfPlot(x)
-fBasics::pacfPlot(x)
-par(mfrow = c(1,1))
-}
+        # Box-Whisker Plot:
+        if (type == 8) {
+          dev.new();
+          boxPlotX(x,col="indianred2") }
 
-# lagged ACF Plot:
-if (type == 10) { fBasics::lacfPlot(x) }
+        # ACF/PACF Plot:
+        if (type == 9) {
+          dev.new();
+        par(mfrow = c(2,1))
+         fBasics::acfPlot(x)
+         fBasics::pacfPlot(x)
+        par(mfrow = c(1,1))
+        }
 
-# Taylor effect Plot:
-if (type == 11) { fBasics::teffectPlot(x)}
-       
-# Put them together: time series plots
-if (type == 12) { 
-par(mfrow = c(2,2))
-seriesPlotX(x,ylab="Returns", col = "indianred2")
-seriesPlotX(100*exp(timeSeries::colCumsums(x)),ylab="Cumulated Returns", col = "indianred2");abline(h = 100, col = "steelblue")
-drawupPlotX(x/100,ylab="Up Returns", col = "indianred2")         
-drawdownPlotX(x/100,ylab="Down Returns", col = "darkgreen")               
-par(mfrow = c(1,1))
-   }
+        # lagged ACF Plot:
+       if (type == 10) {
+         dev.new();
+         fBasics::lacfPlot(x) }
 
-    # Put them together: distribution plots
-if (type == 13) { 
-par(mfrow = c(2,2))
-fBasics::histPlot(x, skip = TRUE) 
-fBasics::densityPlot(x)         
-qqnormPlotX(x)
-boxPlotX(x)
-par(mfrow = c(1,1))       
-} 
+        # Taylor effect Plot:
+       if (type == 11) {
+         dev.new();
+         fBasics::teffectPlot(x)}
 
-# Put them together: Auto-Correlation Plots
-if (type == 14) { 
-par(mfrow = c(2,2))
-fBasics::acfPlot(x)
-fBasics::pacfPlot(x)       
-fBasics::lacfPlot(x)         
-fBasics::teffectPlot(x)
-par(mfrow = c(1,1))      
-} 
-                             
+       # Put them together: time series plots
+       if (type == 12) {
+         dev.new();
+        par(mfrow = c(2,2))
+        seriesPlotX(x,ylab="Returns", col = "indianred2")
+        seriesPlotX(100*exp(timeSeries::colCumsums(x)),ylab="Cumulated Returns", col = "indianred2");abline(h = 100, col = "steelblue")
+        drawupPlotX(x,ylab="Up Returns", col = "indianred2")
+        drawdownPlotX(x,ylab="Down Returns", col = "darkgreen")
+        par(mfrow = c(1,1))
+
+       }
+
+       # Put them together: distribution plots
+       if (type == 13) {
+         dev.new();
+         par(mfrow = c(2,2))
+         fBasics::histPlot(x, skip = TRUE)
+         fBasics::densityPlot(x)
+         qqnormPlotX(x)
+         boxPlotX(x)
+         par(mfrow = c(1,1))
+       }
+
+       # Put them together: Auto-Correlation Plots
+       if (type == 14) {
+         dev.new();
+        par(mfrow = c(2,2))
+         fBasics::acfPlot(x)
+         fBasics::pacfPlot(x)
+         fBasics::lacfPlot(x)
+         fBasics::teffectPlot(x)
+        par(mfrow = c(1,1))
+       }
+
+
 }  #End of dataRefreshCode()
 
     nAssets = dim(x)[2]
@@ -166,7 +201,7 @@ par(mfrow = c(1,1))
   .oneClickVisUniReturns(obj.name = "type", obj.value = "1", no = 1)
 
    # Return Value()
-   #invisible()
+   invisible()
 }
 
 
@@ -176,6 +211,9 @@ par(mfrow = c(1,1))
 .oneClickVisUniReturns <-
   function(names, minima, maxima, resolutions, starts,button.functions, button.names, no, set.no.value, obj.name, obj.value,reset.function, title)
   {
+
+#    if (!require(tcltk, quietly = TRUE))
+#      stop("\n -- Package tcltk not available -- \n\n")
 
     if(!exists(".oneClickVisUniReturns.env")) {
       .oneClickVisUniReturns.env <<- new.env()
@@ -191,7 +229,7 @@ par(mfrow = c(1,1))
     if(missing(title)) {
       title = "Control Widget"
     }
-    
+
     # GUI Settings:
     myPane <- tktoplevel()
 
@@ -199,13 +237,13 @@ par(mfrow = c(1,1))
     tkwm.geometry(myPane, "+0+0")
 
     # Buttons:
-    framed.button0 <- ttkframe(myPane,padding=c(3,3,12,12))
+    framed.button <- ttkframe(myPane,padding=c(3,3,12,12))
 
-    framed.button <- framed.button0
-    tkpack(framed.button0, fill = "x")
+#    framed.button <- scrollable_frame(framed.button0,350,450)
+#    tkpack(framed.button0, fill = "x")
     tkpack(framed.button, fill = "x")
-      
-#loop through button names    
+
+#loop through button names
     for (i in seq(button.names)) {
       button.fun <-button.functions[[i]]
       plotButtons<-tkbutton(framed.button, text = button.names[i], command = button.fun, anchor = "nw",relief="ridge",width = "45")
@@ -213,20 +251,20 @@ par(mfrow = c(1,1))
       tkpack(plotButtons,fill = "x", pady=1)
 }
 
-#===== Quit Button:
+  #===== Quit Button:
     quitCMD = function() {tkdestroy(myPane)}
-    
+
    quitButton<-tkbutton(framed.button, text = "Quit", command = quitCMD, anchor = "center",relief="ridge",width = "8")
    tkbind(myPane,"Q",function() tcl(quitButton,"invoke"))
    tkfocus(quitButton)
    tkconfigure(quitButton,foreground="indianred2", font=tkfont.create(weight="bold",size=10))
 
-   tkconfigure(quitButton,underline=0) 
+   tkconfigure(quitButton,underline=0)
    tkpack(quitButton, side = "right",fill = "x",ipady=3)
- 
- assign(".oneClickVisUniReturns.values.old", starts, envir = .oneClickVisUniReturns.env)
-    
-# Return Value:
-invisible(myPane)
+
+#    assign(".oneClickVisUniReturns.values.old", starts, envir = .oneClickVisUniReturns.env)
+
+    # Return Value:
+    invisible(myPane)
   }
-  
+

@@ -1,90 +1,101 @@
-seriesPlotX <- function(x, labels = TRUE, type = "l", col = "indianred2",ylab="Value", title = TRUE, grid = TRUE, box = TRUE, rug = TRUE) 
+seriesPlotX <- function(x, labels = TRUE, type = "l", col = "indianred2",ylab="Value", title = TRUE, grid = TRUE, box = TRUE, rug = TRUE)
 
-{   
+{
     N = NCOL(x)
     Units = colnames(x)
     if (length(col) == 1) col = rep(col, times = N)
-     
+
     # Series Plots:
     for (i in 1:N) {
-        X = x[, i] 
+        X = x[, i]
         plot(x = X, type = type, col = col[i], ann = FALSE)
-        
+
         # Add Title:
         if (title) {
-            title(main = Units[i], xlab = "Time", ylab = ylab) 
+            title(main = Units[i], xlab = "Time", ylab = ylab)
         } else {
             title("")
-        } 
-        
-        # Add Grid: 
+        }
+
+        # Add Grid:
         if(grid) grid()
-        
-        # Add Box: 
+
+        # Add Box:
         if(box) box()
-        
+
         # Add Rugs:
         if(rug) rug(as.vector(X), ticksize = 0.01, side = 2, quiet = TRUE)
     }
-    
+
     # Return Value:
     invisible()
 }
 
-cumulatedPlotX <- function(x, index = 100, labels = TRUE, type = "l", col = "indianred2",ylab="Values", 
-    title = TRUE, grid = TRUE, box = TRUE, rug = TRUE) 
-{   
+cumulatedPlotX <- function(x, index = 100, labels = TRUE, type = "l", col = "indianred2",ylab="Values",
+    title = TRUE, grid = TRUE, box = TRUE, rug = TRUE)
+{
 
     x = index * exp(timeSeries::colCumsums(x))
-    seriesPlotX(x, labels = labels, ylab=ylab,type = type, col = col,title = title, grid = grid, box = box, rug = rug) 
-         
+    seriesPlotX(x, labels = labels, ylab=ylab,type = type, col = col,title = title, grid = grid, box = box, rug = rug)
+
     # Return Value:
     invisible()
 }
 
-drawdownPlotX <-  
-function(x, labels = TRUE, type = "l", col = "darkgreen", 
-    title = TRUE, ylab="Down returns",grid = TRUE, box = TRUE, rug = TRUE) 
-{   
+drawdownPlotX <-
+function(x, labels = TRUE, type = "l", col = "darkgreen",
+    title = TRUE, ylab="Down returns",grid = TRUE, box = TRUE, rug = TRUE)
+{
     x = timeSeries::drawdowns(x)
     seriesPlotX(x, labels = labels,ylab=ylab, type = type, col = col,
-        title = title, grid = grid, box = box, rug = rug) 
-         
+        title = title, grid = grid, box = box, rug = rug)
+
     # Return Value:
     invisible()
 }
 
-drawupPlotX <- function(x, labels = TRUE, type = "l", col = "indianred2", 
-    title = TRUE, ylab="Up Returns",grid = TRUE, box = TRUE, rug = TRUE) 
-{   
+drawdownPlotX <-
+  function(x, labels = TRUE, type = "l", col = "darkgreen",
+           title = TRUE, ylab="Down returns",grid = TRUE, box = TRUE, rug = TRUE)
+  {
 
-    #stopifnot(is.timeSeries(x))
-    x = drawups(x)
-    seriesPlotX(x, labels = labels, type = type, col = col,ylab=ylab, title = title, grid = grid, box = box, rug = rug) 
-         
+    stopifnot(timeSeries::is.timeSeries(x))
+    x = timeSeries::drawdowns(x)
+    seriesPlotX(x, labels = labels,ylab=ylab, type = type, col = col, title = title, grid = grid, box = box, rug = rug)
+
     # Return Value:
     invisible()
+  }
+
+drawupPlotX <- function(x, labels = TRUE, type = "l", col = "indianred2",
+                        title = TRUE, ylab="Up Returns",grid = TRUE, box = TRUE, rug = TRUE)
+{
+
+  stopifnot(timeSeries::is.timeSeries(x))
+  x = drawups(x)
+  seriesPlotX(x, labels = labels, type = type, col = col,ylab=ylab, title = title, grid = grid, box = box, rug = rug)
+
+  # Return Value:
+  invisible()
 }
 
 drawups <- function (x) {
 
-    #stopifnot(is.timeSeries(x))
-    Title <- x@title
-    Documentation <- x@documentation
-    r <- na.omit(x)
-    startup <- timeSeries::timeSeries(data = t(rep(0, ncol(r))), charvec = time(r)[1])
-    nms <- colnames(r)
-    drawups <- r <- rbind(startup, r)
-    colnames(drawups) <- colnames(r) <- nms
-    cumprodReturns <- timeSeries::colCumprods(1 + r)
-    cumminReturns <- timeSeries::colCummins(cumprodReturns)
-    timeSeries::series(drawups) <- timeSeries::series(cumprodReturns)/timeSeries::series(cumminReturns)-1
-    drawups <- drawups[-1, ]
-    drawups@title <- Title
-    drawups@documentation <- Documentation
-    drawups
-  # Return Value:
-  invisible()
+  stopifnot(timeSeries::is.timeSeries(x))
+  Title <- x@title
+  Documentation <- x@documentation
+  r <- na.omit(x)
+  startup <- timeSeries::timeSeries(data = timeSeries::t(rep(0, ncol(r))), charvec = timeSeries::time(r)[1])
+  nms <- colnames(r)
+  drawups <- r <- rbind(startup, r)
+  colnames(drawups) <- colnames(r) <- nms
+  cumprodReturns <- timeSeries::colCumprods(1 + r)
+  cumminReturns <- timeSeries::colCummins(cumprodReturns)
+  timeSeries::series(drawups) <- timeSeries::series(cumprodReturns)/timeSeries::series(cumminReturns)-1
+  drawups <- drawups[-1, ]
+  drawups@title <- Title
+  drawups@documentation <- Documentation
+  drawups
 }
 
 qqnormPlotX <-function(X, labels = TRUE, col = "indianred2", pch = 19,
@@ -92,11 +103,11 @@ qqnormPlotX <-function(X, labels = TRUE, col = "indianred2", pch = 19,
 {
 
     N=ncol(X)
-    
+
         for (i in 1:N) {
 
         x = as.vector(X[, i])
-    
+
 #    if (!is.timeSeries(x)) x = as.timeSeries(x)
     Units = X@units[i]
     x = as.vector(x)
@@ -117,7 +128,7 @@ qqnormPlotX <-function(X, labels = TRUE, col = "indianred2", pch = 19,
     if (labels) {
         xlab = "Normal Quantiles"
         ylab = paste("Ordered Data")
-        plot(z, x, xlab = xlab, ylab = ylab,main = Units, 
+        plot(z, x, xlab = xlab, ylab = ylab,main = Units,
             col = col, pch = 19)
     } else {
         plot(z, x)
@@ -171,34 +182,34 @@ qqnormPlotX <-function(X, labels = TRUE, col = "indianred2", pch = 19,
 }
 
 
-boxPlotX <-function(X, col = "indianred2", title = TRUE) 
-{   
+boxPlotX <-function(X, col = "indianred2", title = TRUE)
+{
 
     N=ncol(X)
-    
+
         for (i in 1:N) {
 
     x = as.vector(X[, i])
     assetNames = colnames(X)[i]
     x = as.matrix(x)
-   
+
     # Plot:
     ans = boxplot(as.data.frame(x), col = col)
     abline(h = 0 , lty = 3)
-    
+
     # Add Title:
     if (title) {
         title(main = assetNames, ylab = "Value")
     }
-    
+
     # Result:
     colnames(ans$stats) = ans$names
-    rownames(ans$stats) = c("lower whisker", "lower hinge", "median", 
+    rownames(ans$stats) = c("lower whisker", "lower hinge", "median",
         "upper hinge", "upper whisker")
-}    
+}
     # Return Value:
     invisible(ans)
-}   
+}
 
 
-  
+
