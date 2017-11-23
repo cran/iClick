@@ -19,7 +19,7 @@ iClick.GARCH(dat, meanEQ = meanEQ, garchEQ = garchEQ, n.ahead = 15)
 
 \arguments{
   \item{dat}{
-dat has two forms:(1) It may be a 2-column data frame, with the 1-st column as the date string, and the 2nd column is the numeric return series. (2) It can also be created by a ts() object as a none daily time series. However, the ts object may not be suitable for some financial time series returns plot, for example, drawdown.
+dat has two forms:(1) It may be a 2-column data frame, with the 1-st column is the date string, and the 2nd column is the numeric return series. (2) It can also be created as a ts() object as a none daily time series. However, the ts object may not be suitable for some financial time series returns plot, for example, drawdown.
 }
   \item{meanEQ}{
 Specification of mean equation.
@@ -55,7 +55,7 @@ library(rugarch)
 #y=returnsDaily24[,c(1,5)]
 
 ##== Simulation data
-dat=rnorm(100,0.5,1)
+dat=rnorm(200,5,1)
 y=ts(dat, start = c(1970, 1), frequency = 12)
 
 meanEQ=list(AR=1,MA=0,Exo=NULL, autoFitArma=FALSE,arfimaDiff=FALSE,archM=FALSE)
@@ -69,6 +69,8 @@ garchEQ=list(Type="sGARCH",P=1,Q=1, exo=NULL)
   # please check rugarch for details.
   # P is the ARCH order
   # Q is the GARCH order
-iClick.GARCH(y,meanEQ, garchEQ,  n.ahead=10)
+
+#iClick.GARCH(y,meanEQ, garchEQ,  n.ahead=15)
+# This computation takes more than 6 seconds, hence I added a # to block it.
 
 }

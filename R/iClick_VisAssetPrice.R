@@ -44,75 +44,50 @@ colnames(dat)=c("date",names(DAT)[2])
 
         #=== Price Series Plot:
         if (type == 2) {
-          dev.new();plot.new();
         seriesPlotX(y,ylab="Price", col = "indianred2")
         }
 
         #=== Cut and Connect
         if (type == 3) {
-          dev.new();plot.new();
         print(cutAndStack(y, number=6, overlap = 0.1))
         }
 
         #=== Calender heatmap:
         if (type == 4) {
-          dev.new();plot.new();
         print(calendarHeat(y,color=color4))
         }
 
-        if (type == 5) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[2]),cols =color5,year=yr[2])
+        if (type == 5) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[2]),cols =color5,year=yr[2])
         }
 
-        if (type == 6) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[3]),cols=color5,year=yr[3])
+        if (type == 6) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[3]),cols=color5,year=yr[3])
         }
 
-        if (type == 7) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[4]),cols = color5,year=yr[4])
+        if (type == 7) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[4]),cols = color5,year=yr[4])
         }
 
-        if (type == 8) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[5]),cols = color5,year=yr[4])
+        if (type == 8) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[5]),cols = color5,year=yr[4])
         }
 
-        if (type == 9) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[6]),cols = color5,year=yr[6])
+        if (type == 9) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[6]),cols = color5,year=yr[6])
         }
 
-        if (type == 10) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[7]),cols = color5,year=yr[7])
+        if (type == 10) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[7]),cols = color5,year=yr[7])
         }
 
-        if (type == 11) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[8]),cols = color5,year=yr[8])
+        if (type == 11) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[8]),cols = color5,year=yr[8])
         }
 
-        if (type == 12) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[9]),cols = color5,year=yr[9])
+        if (type == 12) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[9]),cols = color5,year=yr[9])
         }
 
-        if (type == 13) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[10]),cols = color5,year=yr[10])
+        if (type == 13) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[10]),cols = color5,year=yr[10])
         }
 
-        if (type == 14) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[11]),cols = color5,year=yr[11])
+        if (type == 14) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[11]),cols = color5,year=yr[11])
         }
 
-        if (type == 15) {
-          dev.new();plot.new();
-          openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[12]),cols = color5,year=yr[12])
+        if (type == 15) {openair::calendarPlot(dat,pollutant=names(dat)[2],main=paste(names(dat),"in", yr[12]),cols = color5,year=yr[12])
         }
 
 }  #End of dataRefreshCode()

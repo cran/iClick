@@ -27,7 +27,7 @@ colnames(x)=c(names(dat)[2])
 
         # Return Series Plot:
         if (type == 2) {
-          dev.new();plot.new();
+          dev.new()
         seriesPlotX(x,ylab="Returns", col = "indianred2") }
 
         # Cumulate Return Series Plot
