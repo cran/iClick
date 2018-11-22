@@ -1,11 +1,13 @@
 
 iClick.VisAssetPrice <- function(dat,color4="r2b",color5="jet") {
+Sys.setlocale(category = "LC_ALL", locale = "English_United States.1252")
 
-  NNA=forecast::auto.arima(rnorm(100))
+  yr0=unique(lubridate::year(index(dat)))
+
+  if (length(yr0)>11) {dat=dat[paste0(c(last(yr0)-10),"::",last(yr0))]} else {dat=dat}
 
   y=timeSeries::as.timeSeries(zoo::as.zoo(dat))
   if (ncol(y)>=2){print("Only univariate time series data is allowed");stop}
-Sys.setlocale(category = "LC_ALL", locale = "English_United States.1252")
 
 YMD=time(y)
 yr=unique(lubridate::year(YMD))
@@ -26,8 +28,9 @@ data.Date=as.POSIXlt(paste(YMD,"02:00:00"),"GMT")
 real.Data=timeSeries::as.timeSeries(data.frame(data.Date,unclass(x)))
 
 newData=cbind(full.Data,real.Data)[,-1]
-
 dat=data.frame(date,unclass(newData))
+
+
 #colnames(dat)=c("date",colnames(dat))
     dataRefreshCode <- function(...)  {
     type = as.integer(.oneClickCalendarPlot(obj.name = "plotType"))
@@ -42,12 +45,12 @@ dat=data.frame(date,unclass(newData))
 
         #=== Price Series Plot:
         if (type == 2) {
-        dev.new();seriesPlotX(y,ylab="Price", col = "indianred2")
+        seriesPlotX(y,ylab="Price", col = "indianred2")
         }
 
         #=== Cut and Connect
         if (type == 3) {
-        dev.new();print(cutAndStack(y, number=6, overlap = 0.1))
+        print(cutAndStack(y, number=6, overlap = 0.1))
         }
 
         #=== Calender heatmap:
